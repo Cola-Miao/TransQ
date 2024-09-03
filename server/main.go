@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
+	"io"
 	"log"
 	"log/slog"
 	"net"
@@ -52,6 +55,27 @@ func main() {
 			slog.Warn("listener.Accept", "error", err.Error())
 			continue
 		}
-		_ = conn
+		go process(conn)
+	}
+}
+
+func process(conn net.Conn) {
+	defer func() {
+		if err := conn.Close(); err != nil {
+			slog.Warn("conn.Close()", "error", err.Error())
+		}
+	}()
+
+	reader := bufio.NewReader(conn)
+	for {
+		data, err := reader.ReadBytes('\n')
+		if err != nil {
+			if !errors.Is(err, io.EOF) {
+				slog.Warn("reader.ReadBytes", "error", err.Error())
+			} else {
+				break
+			}
+		}
+		fmt.Println(string(data))
 	}
 }
