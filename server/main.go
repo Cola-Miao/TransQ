@@ -15,10 +15,13 @@ import (
 const (
 	socket = "transQ.sock"
 	folder = ".transQ/"
+
+	logLever = slog.LevelDebug
 )
 
 var (
 	workDir    string
+	logDir     string
 	socketPath string
 	listener   net.Listener
 )
@@ -30,6 +33,13 @@ func init() {
 	}
 	workDir = wd
 	socketPath = path.Join(workDir, socket)
+
+	initEnvWithGOOS()
+
+	err = initSlog()
+	if err != nil {
+		log.Panicf("initSlog: %s", err.Error())
+	}
 
 	ls, err := initSocketListener()
 	if err != nil {

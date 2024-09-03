@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"path"
+	"runtime"
 )
 
 func initWorkDir() (string, error) {
@@ -37,4 +38,41 @@ func initSocketListener() (net.Listener, error) {
 	}
 
 	return ls, nil
+}
+
+func initSlog() error {
+	err := os.MkdirAll(logDir, os.FileMode(0755))
+	if err != nil {
+		return fmt.Errorf("os.MkdirAll: %w", err)
+	}
+
+	opt := slog.HandlerOptions{
+		AddSource:   true,
+		Level:       logLever,
+		ReplaceAttr: nil,
+	}
+
+	fileName := path.Join(logDir, "transQ.log")
+	fp, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, os.FileMode(0755))
+	if err != nil {
+		return fmt.Errorf("os.OpenFile: %w", err)
+	}
+
+	h := slog.NewTextHandler(fp, &opt)
+	logger := slog.New(h)
+	slog.SetDefault(logger)
+
+	return nil
+}
+
+func initEnvWithGOOS() {
+	switch runtime.GOOS {
+	case "windows":
+		logDir = os.Getenv("ProgramData") + "\\Logs"
+	case "linux":
+		logDir = workDir
+	case "darwin":
+	default:
+		logDir = "./logs/"
+	}
 }
