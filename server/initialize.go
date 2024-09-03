@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/Cola-Miao/TransQ/server/format"
 	"log/slog"
 	"net"
 	"os"
@@ -11,6 +12,9 @@ import (
 )
 
 func initWorkDir() (string, error) {
+	format.FuncStart("initWorkDir")
+	defer format.FuncEnd("initWorkDir")
+
 	hd, err := os.UserHomeDir()
 	if err != nil {
 		slog.Warn("os.UserHomeDir", "error", err.Error())
@@ -27,6 +31,9 @@ func initWorkDir() (string, error) {
 }
 
 func initSocketListener() (net.Listener, error) {
+	format.FuncStart("initSocketListener")
+	defer format.FuncEnd("initSocketListener")
+
 	err := os.Remove(socketPath)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return nil, fmt.Errorf("os.Remove: %w", err)
@@ -41,6 +48,9 @@ func initSocketListener() (net.Listener, error) {
 }
 
 func initSlog() error {
+	format.FuncStart("initSlog")
+	defer format.FuncEnd("initSlog")
+
 	err := os.MkdirAll(logDir, os.FileMode(0755))
 	if err != nil {
 		return fmt.Errorf("os.MkdirAll: %w", err)
@@ -66,6 +76,9 @@ func initSlog() error {
 }
 
 func initEnvWithGOOS() {
+	format.FuncStart("initEnvWithGOOS")
+	defer format.FuncEnd("initEnvWithGOOS")
+
 	switch runtime.GOOS {
 	case "windows":
 		logDir = os.Getenv("ProgramData") + "\\Logs"

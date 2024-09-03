@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/Cola-Miao/TransQ/server/format"
 	"io"
 	"log"
 	"log/slog"
@@ -27,6 +28,9 @@ var (
 )
 
 func init() {
+	format.FuncStart("init")
+	defer format.FuncEnd("init")
+
 	wd, err := initWorkDir()
 	if err != nil {
 		log.Panicf("initWorkDir: %s", err.Error())
@@ -49,6 +53,7 @@ func init() {
 }
 
 func main() {
+	format.FuncStart("main")
 	defer func() {
 		if err := listener.Close(); err != nil {
 			slog.Warn("listener.Close", "error", err.Error())
@@ -57,6 +62,8 @@ func main() {
 		if err := os.Remove(socketPath); err != nil && !errors.Is(err, os.ErrNotExist) {
 			slog.Warn("os.Remove", "error", err.Error())
 		}
+
+		format.FuncEnd("main")
 	}()
 
 	for {
@@ -70,10 +77,12 @@ func main() {
 }
 
 func process(conn net.Conn) {
+	format.FuncStart("process")
 	defer func() {
 		if err := conn.Close(); err != nil {
 			slog.Warn("conn.Close()", "error", err.Error())
 		}
+		format.FuncEnd("process")
 	}()
 
 	reader := bufio.NewReader(conn)
