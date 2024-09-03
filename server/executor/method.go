@@ -21,3 +21,7 @@ func echo(data string) error {
 
 	return nil
 }
+
+func translate(data string) error {
+	return nil
+}

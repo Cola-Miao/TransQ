@@ -9,6 +9,7 @@ type handler func(data string) error
 
 const (
 	methodEcho = iota + 1
+	methodTranslate
 )
 
 var exec executor

@@ -19,6 +19,7 @@ func (e *executor) init() {
 	e.name = make(map[Method]string)
 
 	e.register(methodEcho, echo, "echo")
+	e.register(methodTranslate, translate, "translate")
 }
 
 func (e *executor) register(method Method, handle handler, name string) {
