@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"io"
+	"log"
 	"log/slog"
 	"net"
 )
@@ -20,6 +21,7 @@ func Listen(listener net.Listener) {
 			slog.Warn("listener.Accept", "error", err.Error())
 			continue
 		}
+		log.Println("connect: ", conn.LocalAddr())
 		go process(conn)
 	}
 }
@@ -40,6 +42,7 @@ func process(conn net.Conn) {
 			if !errors.Is(err, io.EOF) {
 				slog.Warn("reader.ReadBytes", "error", err.Error())
 			} else {
+				log.Println("disconnect: ", conn.LocalAddr())
 				break
 			}
 		}
