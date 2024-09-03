@@ -1,10 +1,10 @@
 package uds
 
 import (
-	"bufio"
+	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 	"io"
 	"log"
 	"log/slog"
@@ -35,9 +35,10 @@ func process(conn net.Conn) {
 		format.FuncEnd("process")
 	}()
 
-	reader := bufio.NewReader(conn)
+	decoder := json.NewDecoder(conn)
 	for {
-		data, err := reader.ReadBytes('\n')
+		var info Information
+		err := decoder.Decode(&info)
 		if err != nil {
 			if !errors.Is(err, io.EOF) {
 				slog.Warn("reader.ReadBytes", "error", err.Error())
@@ -46,6 +47,5 @@ func process(conn net.Conn) {
 				break
 			}
 		}
-		fmt.Printf("data: %s", string(data))
 	}
 }
