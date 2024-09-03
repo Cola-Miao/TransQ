@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	"io"
 	"log/slog"
 	"net"
 	"os"
@@ -67,8 +68,9 @@ func initSlog() error {
 	if err != nil {
 		return fmt.Errorf("os.OpenFile: %w", err)
 	}
+	multiWriter := io.MultiWriter(fp, os.Stdout)
 
-	h := slog.NewTextHandler(fp, &opt)
+	h := slog.NewTextHandler(multiWriter, &opt)
 	logger := slog.New(h)
 	slog.SetDefault(logger)
 
