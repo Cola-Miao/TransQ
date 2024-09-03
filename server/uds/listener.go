@@ -30,7 +30,7 @@ func process(conn net.Conn) {
 	format.FuncStart("process")
 	defer func() {
 		if err := conn.Close(); err != nil {
-			slog.Warn("conn.Close()", "error", err.Error())
+			slog.Warn("conn.Close", "error", err.Error())
 		}
 		format.FuncEnd("process")
 	}()
