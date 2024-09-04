@@ -3,6 +3,7 @@ package uds
 import (
 	"encoding/json"
 	"errors"
+	"github.com/Cola-Miao/TransQ/server/executor"
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
 	"io"
@@ -38,14 +39,21 @@ func process(conn net.Conn) {
 	decoder := json.NewDecoder(conn)
 	for {
 		var info Information
+
 		err := decoder.Decode(&info)
 		if err != nil {
 			if !errors.Is(err, io.EOF) {
-				slog.Warn("reader.ReadBytes", "error", err.Error())
+				slog.Error("reader.ReadBytes", "error", err.Error())
+				break
 			} else {
 				log.Println("disconnect: ", conn.LocalAddr())
 				break
 			}
+		}
+
+		err = executor.Do(&info)
+		if err != nil {
+			slog.Error("executor.Do", "error", err.Error())
 		}
 	}
 }
