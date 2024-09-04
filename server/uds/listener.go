@@ -17,26 +17,30 @@ func Listen(listener net.Listener) {
 	defer format.FuncEnd("Listen")
 
 	for {
+		var tqc TransQClient
+
 		conn, err := listener.Accept()
 		if err != nil {
 			slog.Warn("listener.Accept", "error", err.Error())
 			continue
 		}
+		tqc.Conn = conn
+
 		log.Println("connect: ", conn.LocalAddr())
-		go process(conn)
+		go process(&tqc)
 	}
 }
 
-func process(conn net.Conn) {
+func process(tqc *TransQClient) {
 	format.FuncStart("process")
 	defer func() {
-		if err := conn.Close(); err != nil {
+		if err := tqc.Conn.Close(); err != nil {
 			slog.Warn("conn.Close", "error", err.Error())
 		}
 		format.FuncEnd("process")
 	}()
 
-	decoder := json.NewDecoder(conn)
+	decoder := json.NewDecoder(tqc.Conn)
 	for {
 		var info Information
 
@@ -46,7 +50,7 @@ func process(conn net.Conn) {
 				slog.Error("reader.ReadBytes", "error", err.Error())
 				break
 			} else {
-				log.Println("disconnect: ", conn.LocalAddr())
+				log.Println("disconnect: ", tqc.Conn.LocalAddr())
 				break
 			}
 		}
