@@ -35,7 +35,7 @@ func (e *executor) register(method Method, handle handler, name string) {
 }
 
 func (e *executor) do(info *Information) error {
-	format.FuncStart("executor.do")
+	format.FuncStartWithData("executor.do", info)
 	defer format.FuncEnd("executor.do")
 
 	if _, ok := e.handle[info.Method]; !ok {

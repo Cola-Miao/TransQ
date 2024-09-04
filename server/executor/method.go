@@ -7,7 +7,7 @@ import (
 )
 
 func echo(data string) error {
-	format.FuncStartWithData("echo", data)
+	format.FuncStart("echo")
 	defer format.FuncEnd("echo")
 
 	var req echoRequest
