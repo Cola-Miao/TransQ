@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	cfg "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"github.com/Cola-Miao/TransQ/server/uds"
 	"log"
@@ -12,8 +13,9 @@ import (
 )
 
 const (
-	socket = "transQ.sock"
-	folder = ".transQ/"
+	socket     = "transQ.sock"
+	folder     = ".transQ/"
+	configType = "yaml"
 
 	logLever = slog.LevelDebug
 )
@@ -37,6 +39,11 @@ func init() {
 	socketPath = path.Join(workDir, socket)
 
 	initEnvWithGOOS()
+
+	err = cfg.InitViper(workDir, configType)
+	if err != nil {
+		slog.Warn("init config: %s", "error", err.Error())
+	}
 
 	err = initSlog()
 	if err != nil {
