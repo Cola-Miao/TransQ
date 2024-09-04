@@ -1,19 +1,21 @@
 package format
 
-import "log"
+import (
+	"log/slog"
+)
 
 func FuncStart(funcName string) {
-	log.Printf("%s start\n", funcName)
+	slog.Debug("start", "func", funcName)
 }
 
 func FuncEnd(funcName string) {
-	log.Printf("%s end\n", funcName)
+	slog.Debug("end", "func", funcName)
 }
 
 func FuncStartWithData(funcName string, data any) {
-	log.Printf("%s start with data: %+v\n", funcName, data)
+	slog.Debug("start", "func", funcName, "data", data)
 }
 
 func FuncEndWithData(funcName string, data any) {
-	log.Printf("%s end with data: %+v\n", funcName, data)
+	slog.Debug("end", "func", funcName, "data", data)
 }

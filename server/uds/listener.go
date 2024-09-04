@@ -7,7 +7,6 @@ import (
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
 	"io"
-	"log"
 	"log/slog"
 	"net"
 	"time"
@@ -29,6 +28,7 @@ func Listen(listener net.Listener) {
 			slog.Warn("listener.Accept", "error", err.Error())
 			continue
 		}
+		slog.Info("connect", "addr", conn.LocalAddr().String())
 
 		err = conn.SetDeadline(time.Now().Add(timeout))
 		if err != nil {
@@ -41,7 +41,7 @@ func Listen(listener net.Listener) {
 }
 
 func process(tqc *TransQClient) {
-	format.FuncStartWithData("process", tqc)
+	format.FuncStart("process")
 	defer func() {
 		if err := tqc.Conn.Close(); err != nil {
 			slog.Warn("conn.Close", "error", err.Error())
@@ -56,7 +56,7 @@ func process(tqc *TransQClient) {
 		err := decoder.Decode(&info)
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				log.Println("disconnect: ", tqc.Conn.LocalAddr())
+				slog.Info("disconnect", "addr", tqc.Conn.LocalAddr().String())
 				break
 			} else {
 				slog.Error("reader.ReadBytes", "error", err.Error())
