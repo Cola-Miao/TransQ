@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"io"
 	"log/slog"
@@ -59,7 +60,7 @@ func initSlog() error {
 
 	opt := slog.HandlerOptions{
 		AddSource:   true,
-		Level:       logLever,
+		Level:       slog.Level(Cfg.LogLevel),
 		ReplaceAttr: nil,
 	}
 
