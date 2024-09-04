@@ -16,8 +16,6 @@ const (
 	socket     = "transQ.sock"
 	folder     = ".transQ/"
 	configType = "yaml"
-
-	logLever = slog.LevelDebug
 )
 
 var (
@@ -42,7 +40,7 @@ func init() {
 
 	err = cfg.InitViper(workDir, configType)
 	if err != nil {
-		slog.Warn("init config: %s", "error", err.Error())
+		slog.Warn("init config", "error", err.Error())
 	}
 
 	err = initSlog()
