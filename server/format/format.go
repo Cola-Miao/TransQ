@@ -5,17 +5,17 @@ import (
 )
 
 func FuncStart(funcName string) {
-	slog.Debug("start", "func", funcName)
+	slog.Debug(funcName, "status", "start")
 }
 
 func FuncEnd(funcName string) {
-	slog.Debug("end", "func", funcName)
+	slog.Debug(funcName, "status", "end")
 }
 
 func FuncStartWithData(funcName string, data any) {
-	slog.Debug("start", "func", funcName, "data", data)
+	slog.Debug(funcName, "status", "start", "data", data)
 }
 
 func FuncEndWithData(funcName string, data any) {
-	slog.Debug("end", "func", funcName, "data", data)
+	slog.Debug(funcName, "status", "end", "data", data)
 }
