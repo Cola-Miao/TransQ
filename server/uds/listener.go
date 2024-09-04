@@ -10,6 +10,11 @@ import (
 	"log"
 	"log/slog"
 	"net"
+	"time"
+)
+
+const (
+	timeout = 0
 )
 
 func Listen(listener net.Listener) {
@@ -23,6 +28,11 @@ func Listen(listener net.Listener) {
 		if err != nil {
 			slog.Warn("listener.Accept", "error", err.Error())
 			continue
+		}
+
+		err = conn.SetDeadline(time.Now().Add(timeout))
+		if err != nil {
+			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}
 		tqc.Conn = conn
 
@@ -53,6 +63,11 @@ func process(tqc *TransQClient) {
 				log.Println("disconnect: ", tqc.Conn.LocalAddr())
 				break
 			}
+		}
+
+		err = tqc.Conn.SetDeadline(time.Now().Add(timeout))
+		if err != nil {
+			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}
 
 		err = executor.Do(&info)
