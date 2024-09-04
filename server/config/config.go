@@ -36,6 +36,7 @@ func InitViper(cfgPath, cfgType string) error {
 	if err != nil {
 		slog.Warn("viper.SafeWriteConfig", "error", err.Error())
 	}
+	slog.Info("config", "server", Cfg)
 
 	return nil
 }

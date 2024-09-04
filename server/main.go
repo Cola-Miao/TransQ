@@ -53,6 +53,8 @@ func init() {
 		log.Panicf("initSocketListener: %s", err.Error())
 	}
 	listener = ls
+
+	slog.Info("run param", "work dir", workDir, "log dir", logDir, "socket path", socketPath)
 }
 
 func main() {
