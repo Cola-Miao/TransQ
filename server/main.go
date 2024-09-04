@@ -16,13 +16,15 @@ const (
 	socket     = "transQ.sock"
 	folder     = ".transQ/"
 	configType = "yaml"
+	database   = "transQ.sqlite"
 )
 
 var (
-	workDir    string
-	logDir     string
-	socketPath string
-	listener   net.Listener
+	workDir      string
+	logDir       string
+	socketPath   string
+	databasePath string
+	listener     net.Listener
 )
 
 func init() {
@@ -34,7 +36,9 @@ func init() {
 		log.Panicf("initWorkDir: %s", err.Error())
 	}
 	workDir = wd
+
 	socketPath = path.Join(workDir, socket)
+	databasePath = path.Join(workDir, database)
 
 	initEnvWithGOOS()
 
