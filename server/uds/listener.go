@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	timeout = 0
+	timeout = time.Minute * 0
 )
 
 func Listen(listener net.Listener) {
@@ -30,7 +30,7 @@ func Listen(listener net.Listener) {
 		}
 		slog.Info("connect", "addr", conn.LocalAddr().String())
 
-		err = conn.SetDeadline(time.Now().Add(timeout))
+		err = conn.SetDeadline(getOutTime())
 		if err != nil {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}
@@ -64,7 +64,7 @@ func process(tqc *TransQClient) {
 			}
 		}
 
-		err = tqc.Conn.SetDeadline(time.Now().Add(timeout))
+		err = tqc.Conn.SetDeadline(getOutTime())
 		if err != nil {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}
@@ -74,4 +74,11 @@ func process(tqc *TransQClient) {
 			slog.Error("executor.Do", "error", err.Error())
 		}
 	}
+}
+
+func getOutTime() time.Time {
+	if timeout == 0 {
+		return time.Time{}
+	}
+	return time.Now().Add(timeout)
 }
