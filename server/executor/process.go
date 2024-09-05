@@ -12,12 +12,12 @@ import (
 )
 
 func Process(conn net.Conn) {
-	format.FuncStart("process")
+	format.FuncStart("Process")
 	defer func() {
 		if err := conn.Close(); err != nil {
 			slog.Warn("conn.Close", "error", err.Error())
 		}
-		format.FuncEnd("process")
+		format.FuncEnd("Process")
 	}()
 
 	var tqc transQClient
