@@ -7,7 +7,7 @@ import (
 	. "github.com/Cola-Miao/TransQ/server/models"
 )
 
-func auth(tqc *transQClient) error {
+func mtdAuth(tqc *transQClient) error {
 	format.FuncStart("auth")
 	defer format.FuncEnd("auth")
 
@@ -17,10 +17,15 @@ func auth(tqc *transQClient) error {
 		return fmt.Errorf("json.Unmarshal: %w", err)
 	}
 
+	err = auth(tqc, &req)
+	if err != nil {
+		return fmt.Errorf("auth: %w", err)
+	}
+
 	return nil
 }
 
-func echo(tqc *transQClient) error {
+func mtdEcho(tqc *transQClient) error {
 	format.FuncStart("echo")
 	defer format.FuncEnd("echo")
 
@@ -28,7 +33,7 @@ func echo(tqc *transQClient) error {
 
 	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
 	if err != nil {
-		return fmt.Errorf("echo: %w", err)
+		return fmt.Errorf("json.Unmarshal: %w", err)
 	}
 
 	fmt.Println("echo resp: ", req.Message)
@@ -36,6 +41,6 @@ func echo(tqc *transQClient) error {
 	return nil
 }
 
-func translate(tqc *transQClient) error {
+func mtdTranslate(tqc *transQClient) error {
 	return nil
 }

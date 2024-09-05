@@ -25,8 +25,8 @@ func (e *executor) init() {
 	e.name = make(map[method]string)
 	e.conn = make(map[int]net.Conn)
 
-	e.register(methodAuth, auth, "auth")
-	e.register(methodEcho, echo, "echo")
+	e.register(methodAuth, mtdAuth, "auth")
+	e.register(methodEcho, mtdEcho, "echo")
 	e.register(methodTranslate, translate, "translate")
 }
 
