@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 var (
 	Cfg config
 )
@@ -10,5 +12,5 @@ type config struct {
 }
 
 type listener struct {
-	Timeout int `yaml:"timeout"`
+	Timeout time.Duration `yaml:"timeout"`
 }

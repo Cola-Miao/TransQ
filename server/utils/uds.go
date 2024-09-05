@@ -3,9 +3,10 @@ package utils
 import (
 	"fmt"
 	"net"
+	"time"
 )
 
-func DialSocketWithTimeout(addr string, timeout int) (net.Conn, error) {
+func DialSocketWithTimeout(addr string, timeout time.Duration) (net.Conn, error) {
 	conn, err := net.Dial("unix", addr)
 	if err != nil {
 		return nil, fmt.Errorf("net.Dial: %w", err)
