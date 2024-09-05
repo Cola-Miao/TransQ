@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log/slog"
 	"net"
 	"time"
 )
@@ -14,7 +15,10 @@ func DialSocketWithTimeout(addr string, timeout time.Duration) (net.Conn, error)
 
 	err = conn.SetDeadline(GetOutTime(timeout))
 	if err != nil {
-		conn.Close()
+		der := conn.Close()
+		if der != nil {
+			slog.Error("conn.Close", "error", err.Error())
+		}
 		return nil, fmt.Errorf("SetDeadline: %w", err)
 	}
 
