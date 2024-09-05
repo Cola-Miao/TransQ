@@ -22,7 +22,3 @@ type executor struct {
 	handle map[Method]handler
 	name   map[Method]string
 }
-
-type echoRequest struct {
-	Message string `json:"msg"`
-}
