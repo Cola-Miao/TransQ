@@ -7,6 +7,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var db *sql.DB
+
 func InitSqlite(dbPath string) error {
 	format.FuncStart("InitSqlite")
 	defer format.FuncEnd("InitSqlite")
@@ -20,6 +22,8 @@ func InitSqlite(dbPath string) error {
 	if err != nil {
 		return fmt.Errorf("slt.Ping: %w", err)
 	}
+
+	db = slt
 
 	return nil
 }
