@@ -23,7 +23,7 @@ func (e *executor) init() {
 
 	e.handle = make(map[method]handler)
 	e.name = make(map[method]string)
-	e.addr = make(map[int]string)
+	e.conn = make(map[int]net.Conn)
 
 	e.register(methodAuth, auth, "auth")
 	e.register(methodEcho, echo, "echo")
