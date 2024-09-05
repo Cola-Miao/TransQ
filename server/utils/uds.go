@@ -20,3 +20,17 @@ func DialSocketWithTimeout(addr string, timeout time.Duration) (net.Conn, error)
 
 	return conn, nil
 }
+
+func AcceptSocketWithTimeout(ls net.Listener, timeout time.Duration) (net.Conn, error) {
+	conn, err := ls.Accept()
+	if err != nil {
+		return nil, fmt.Errorf("ls.Accept: %w", err)
+	}
+
+	err = conn.SetDeadline(GetOutTime(timeout))
+	if err != nil {
+		return nil, fmt.Errorf("SetDeadline: %w", err)
+	}
+
+	return conn, nil
+}
