@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	"log/slog"
 )
 
 func mtdAuth(tqc *transQClient) error {
@@ -16,8 +17,21 @@ func mtdAuth(tqc *transQClient) error {
 		return fmt.Errorf("json.Unmarshal: %w", err)
 	}
 
+	resp := authResponse{
+		common{
+			Sequence: req.Sequence,
+			Code:     success,
+		}}
+	defer func() {
+		der := exec.writeConn(req.ID, &resp)
+		if der != nil {
+			slog.Error("exec.writeConn", "error", err.Error(), "id", req.ID)
+		}
+	}()
+
 	err = auth(tqc, &req)
 	if err != nil {
+		resp.Code = failed
 		return fmt.Errorf("auth: %w", err)
 	}
 
