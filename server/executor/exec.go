@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"log"
@@ -81,5 +82,24 @@ func (e *executor) setConnForce(id int, conn net.Conn) error {
 	defer e.mu.Unlock()
 
 	e.conn[id] = conn
+	return nil
+}
+
+func (e *executor) writeConn(id int, resp any) error {
+	conn, err := e.getConn(id)
+	if err != nil {
+		return fmt.Errorf("getConn: %w", err)
+	}
+
+	data, err := json.Marshal(resp)
+	if err != nil {
+		return fmt.Errorf("json.Marshal: %w", err)
+	}
+
+	_, err = conn.Write(data)
+	if err != nil {
+		return fmt.Errorf("conn.Write: %w", err)
+	}
+
 	return nil
 }
