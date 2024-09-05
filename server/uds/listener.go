@@ -21,7 +21,7 @@ func Listen(listener net.Listener) {
 		}
 		slog.Info("connect", "addr", conn.LocalAddr().String())
 
-		err = conn.SetDeadline(utils.GetOutTime(Cfg.ConnTimeout))
+		err = conn.SetDeadline(utils.GetOutTime(Cfg.Listener.Timeout))
 		if err != nil {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}

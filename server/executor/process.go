@@ -41,7 +41,7 @@ func processLoop(tqc *transQClient) {
 			}
 		}
 
-		err = tqc.Conn.SetDeadline(utils.GetOutTime(Cfg.ConnTimeout))
+		err = tqc.Conn.SetDeadline(utils.GetOutTime(Cfg.Listener.Timeout))
 		if err != nil {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}

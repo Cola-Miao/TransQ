@@ -27,7 +27,7 @@ func auth(tqc *transQClient, req *authRequest) error {
 }
 
 func forceAuth(tqc *transQClient, req *authRequest) error {
-	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.ConnTimeout)
+	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.Listener.Timeout)
 	if err != nil {
 		return fmt.Errorf("utils.DialSocketWithTimeout: %w", err)
 	}
@@ -51,7 +51,7 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 		return errIDExist
 	}
 
-	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.ConnTimeout)
+	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.Listener.Timeout)
 	if err != nil {
 		return fmt.Errorf("utils.DialSocketWithTimeout: %w", err)
 	}
