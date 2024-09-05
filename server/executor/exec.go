@@ -1,10 +1,16 @@
 package executor
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
+	"github.com/Cola-Miao/TransQ/server/utils"
+	"io"
 	"log"
+	"log/slog"
+	"net"
 )
 
 func init() {
@@ -52,4 +58,40 @@ func (e *executor) do(info *Information) error {
 
 func Do(info *Information) error {
 	return exec.do(info)
+}
+
+func Process(conn net.Conn) {
+	format.FuncStart("process")
+	defer func() {
+		if err := conn.Close(); err != nil {
+			slog.Warn("conn.Close", "error", err.Error())
+		}
+		format.FuncEnd("process")
+	}()
+
+	decoder := json.NewDecoder(conn)
+	for {
+		var info Information
+
+		err := decoder.Decode(&info)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				slog.Info("disconnect", "addr", conn.LocalAddr().String())
+				break
+			} else {
+				slog.Error("reader.ReadBytes", "error", err.Error())
+				break
+			}
+		}
+
+		err = conn.SetDeadline(utils.GetOutTime())
+		if err != nil {
+			slog.Warn("conn.SetDeadline", "error", err.Error())
+		}
+
+		err = exec.do(&info)
+		if err != nil {
+			slog.Error("executor.Do", "error", err.Error())
+		}
+	}
 }
