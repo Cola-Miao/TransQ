@@ -23,7 +23,7 @@ var (
 )
 
 type executor struct {
-	mu     sync.Mutex
+	mu     sync.RWMutex
 	handle map[method]handler
 	name   map[method]string
 	conn   map[int]net.Conn
