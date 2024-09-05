@@ -22,6 +22,7 @@ var (
 type executor struct {
 	handle map[method]handler
 	name   map[method]string
+	addr   map[int]string
 }
 
 type transQClient struct {
