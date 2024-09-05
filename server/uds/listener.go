@@ -14,17 +14,12 @@ func Listen(listener net.Listener) {
 	defer format.FuncEnd("Listen")
 
 	for {
-		conn, err := listener.Accept()
+		conn, err := utils.AcceptSocketWithTimeout(listener, Cfg.Listener.Timeout)
 		if err != nil {
-			slog.Warn("listener.Accept", "error", err.Error())
+			slog.Error("utils.AcceptSocketWithTimeout", "error", err.Error())
 			continue
 		}
 		slog.Info("connect", "addr", conn.LocalAddr().String())
-
-		err = conn.SetDeadline(utils.GetOutTime(Cfg.Listener.Timeout))
-		if err != nil {
-			slog.Warn("conn.SetDeadline", "error", err.Error())
-		}
 
 		go executor.Process(conn)
 	}
