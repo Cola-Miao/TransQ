@@ -21,7 +21,7 @@ func Listen(listener net.Listener) {
 	defer format.FuncEnd("Listen")
 
 	for {
-		var tqc TransQClient
+		var tqc transQClient
 
 		conn, err := listener.Accept()
 		if err != nil {
@@ -36,11 +36,11 @@ func Listen(listener net.Listener) {
 		}
 		tqc.Conn = conn
 
-		go process(&tqc)
+		go tqc.process()
 	}
 }
 
-func process(tqc *TransQClient) {
+func (tqc *transQClient) process() {
 	format.FuncStart("process")
 	defer func() {
 		if err := tqc.Conn.Close(); err != nil {
