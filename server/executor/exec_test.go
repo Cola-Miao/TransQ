@@ -6,14 +6,14 @@ import (
 )
 
 var (
-	echoInfo = &Information{
+	echoInfo = &information{
 		Method: 1,
 		Data:   "{\"msg\":\"ping\"}",
 	}
 )
 
 func TestDo(t *testing.T) {
-	err := Do(echoInfo)
+	err := exec.do(echoInfo)
 	if err != nil {
 		t.Error(err)
 	}

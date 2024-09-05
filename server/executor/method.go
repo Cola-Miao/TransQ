@@ -4,15 +4,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 )
 
-func echo(data string) error {
+func auth(tqc *transQClient) error {
+	format.FuncStart("auth")
+	defer format.FuncEnd("auth")
+
+	var req AuthRequest
+	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
+	if err != nil {
+		return fmt.Errorf("json.Unmarshal: %w", err)
+	}
+
+	return nil
+}
+
+func echo(tqc *transQClient) error {
 	format.FuncStart("echo")
 	defer format.FuncEnd("echo")
 
-	var req echoRequest
+	var req EchoRequest
 
-	err := json.Unmarshal([]byte(data), &req)
+	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
 	if err != nil {
 		return fmt.Errorf("echo: %w", err)
 	}
@@ -22,6 +36,6 @@ func echo(data string) error {
 	return nil
 }
 
-func translate(data string) error {
+func translate(tqc *transQClient) error {
 	return nil
 }

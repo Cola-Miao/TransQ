@@ -1,6 +1,7 @@
 package uds
 
 import (
+	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/executor"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"github.com/Cola-Miao/TransQ/server/utils"
@@ -20,7 +21,7 @@ func Listen(listener net.Listener) {
 		}
 		slog.Info("connect", "addr", conn.LocalAddr().String())
 
-		err = conn.SetDeadline(utils.GetOutTime())
+		err = conn.SetDeadline(utils.GetOutTime(Cfg.ConnTimeout))
 		if err != nil {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}

@@ -2,10 +2,10 @@ package executor
 
 import (
 	"errors"
-	. "github.com/Cola-Miao/TransQ/server/models"
+	"net"
 )
 
-type handler func(data string) error
+type handler func(tqc *transQClient) error
 
 const (
 	methodEcho = iota + 1
@@ -19,6 +19,20 @@ var (
 )
 
 type executor struct {
-	handle map[Method]handler
-	name   map[Method]string
+	handle map[method]handler
+	name   map[method]string
+}
+
+type transQClient struct {
+	Conn net.Conn
+	Info *information
+	Addr string
+	ID   string
+}
+
+type method uint8
+
+type information struct {
+	Method method `json:"mtd"`
+	Data   string `json:"dat"`
 }
