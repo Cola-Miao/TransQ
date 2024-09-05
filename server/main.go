@@ -45,7 +45,7 @@ func init() {
 
 	err = cfg.InitViper(workDir, configType)
 	if err != nil {
-		slog.Warn("init config", "error", err.Error())
+		slog.Warn("cfg.InitViper", "error", err.Error())
 	}
 
 	err = initSlog()
@@ -55,7 +55,7 @@ func init() {
 
 	err = dao.InitSqlite(databasePath)
 	if err != nil {
-		log.Panicf("initSqlite: %s", err.Error())
+		log.Panicf("dao.InitSqlite: %s", err.Error())
 	}
 
 	ls, err := initSocketListener()

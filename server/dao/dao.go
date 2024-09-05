@@ -18,7 +18,7 @@ func InitSqlite(dbPath string) error {
 
 	err = slt.Ping()
 	if err != nil {
-		return fmt.Errorf("db.Ping: %w", err)
+		return fmt.Errorf("slt.Ping: %w", err)
 	}
 
 	return nil
