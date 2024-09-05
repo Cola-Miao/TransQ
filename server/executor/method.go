@@ -8,8 +8,8 @@ import (
 )
 
 func mtdAuth(tqc *transQClient) error {
-	format.FuncStart("auth")
-	defer format.FuncEnd("auth")
+	format.FuncStart("mtdAuth")
+	defer format.FuncEnd("mtdAuth")
 
 	var req AuthRequest
 	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
@@ -26,8 +26,8 @@ func mtdAuth(tqc *transQClient) error {
 }
 
 func mtdEcho(tqc *transQClient) error {
-	format.FuncStart("echo")
-	defer format.FuncEnd("echo")
+	format.FuncStart("mtdEcho")
+	defer format.FuncEnd("mtdEcho")
 
 	var req EchoRequest
 
