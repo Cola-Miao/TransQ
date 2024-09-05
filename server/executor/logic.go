@@ -3,11 +3,10 @@ package executor
 import (
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
-	"github.com/Cola-Miao/TransQ/server/models"
 	"net"
 )
 
-func auth(tqc *transQClient, req *models.AuthRequest) error {
+func auth(tqc *transQClient, req *authRequest) error {
 	format.FuncStart("auth")
 	defer format.FuncEnd("auth")
 
@@ -26,7 +25,7 @@ func auth(tqc *transQClient, req *models.AuthRequest) error {
 	return nil
 }
 
-func forceAuth(tqc *transQClient, req *models.AuthRequest) error {
+func forceAuth(tqc *transQClient, req *authRequest) error {
 	conn, err := net.Dial("unix", req.Addr)
 	if err != nil {
 		return fmt.Errorf("net.Dial: %w", err)
@@ -44,7 +43,7 @@ func forceAuth(tqc *transQClient, req *models.AuthRequest) error {
 	return nil
 }
 
-func stdAuth(tqc *transQClient, req *models.AuthRequest) error {
+func stdAuth(tqc *transQClient, req *authRequest) error {
 	// check id exist
 	_, err := exec.getConn(req.ID)
 	if err == nil {
