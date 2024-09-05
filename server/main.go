@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	cfg "github.com/Cola-Miao/TransQ/server/config"
+	"github.com/Cola-Miao/TransQ/server/dao"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"github.com/Cola-Miao/TransQ/server/uds"
 	"log"
@@ -50,6 +51,11 @@ func init() {
 	err = initSlog()
 	if err != nil {
 		log.Panicf("initSlog: %s", err.Error())
+	}
+
+	err = dao.InitSqlite(databasePath)
+	if err != nil {
+		log.Panicf("initSqlite: %s", err.Error())
 	}
 
 	ls, err := initSocketListener()
