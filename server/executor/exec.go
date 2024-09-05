@@ -18,14 +18,15 @@ func (e *executor) init() {
 
 	e.handle = make(map[method]handler)
 	e.name = make(map[method]string)
+	e.structure = make(map[method]any)
 	e.conn = make(map[int]net.Conn)
 
-	e.register(methodAuth, mtdAuth, "auth")
-	e.register(methodEcho, mtdEcho, "echo")
-	e.register(methodTranslate, mtdTranslate, "translate")
+	e.register(methodAuth, mtdAuth, "auth", &authRequest{})
+	e.register(methodEcho, mtdEcho, "echo", &echoRequest{})
+	e.register(methodTranslate, mtdTranslate, "translate", nil)
 }
 
-func (e *executor) register(method method, handle handler, name string) {
+func (e *executor) register(method method, handle handler, name string, structure any) {
 	if _, ok := e.handle[method]; ok {
 		log.Panicf("e.handle has method: %d", method)
 	}
@@ -35,19 +36,46 @@ func (e *executor) register(method method, handle handler, name string) {
 		log.Panicf("e.name has method: %d", method)
 	}
 	e.name[method] = name
+
+	if _, ok := e.structure[method]; ok {
+		log.Panicf("e.structure has method: %d", method)
+	}
+	e.structure[method] = structure
 }
 
 func (e *executor) do(tqc *transQClient) error {
 	format.FuncStartWithData("executor.do", tqc)
 	defer format.FuncEnd("executor.do")
 
-	if _, ok := e.handle[tqc.Info.Method]; !ok {
+	mtd := tqc.Info.Method
+
+	if _, ok := e.handle[mtd]; !ok {
 		return errNoMethod
 	}
 
-	err := e.handle[tqc.Info.Method](tqc)
+	name, ok := e.name[mtd]
+	if !ok {
+		return errNoName
+	}
+
+	str, ok := e.structure[mtd]
+	if !ok {
+		return errNoStructure
+	}
+
+	err := json.Unmarshal([]byte(tqc.Info.Data), &str)
 	if err != nil {
-		return fmt.Errorf("method: %s: %w", e.name[tqc.Info.Method], err)
+		return fmt.Errorf("json.Unmarshal: %w", err)
+	}
+
+	hdl, ok := e.handle[mtd]
+	if !ok {
+		return errNoHandler
+	}
+
+	err = hdl(tqc, str)
+	if err != nil {
+		return fmt.Errorf("method: %s: %w", name, err)
 	}
 
 	return nil

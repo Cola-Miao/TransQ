@@ -1,20 +1,18 @@
 package executor
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
 	"log/slog"
 )
 
-func mtdAuth(tqc *transQClient) error {
+func mtdAuth(tqc *transQClient, str any) error {
 	format.FuncStart("mtdAuth")
 	defer format.FuncEnd("mtdAuth")
 
-	var req authRequest
-	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
-	if err != nil {
-		return fmt.Errorf("json.Unmarshal: %w", err)
+	req, ok := str.(*authRequest)
+	if !ok {
+		return errBadRequestType
 	}
 
 	resp := authResponse{
@@ -25,11 +23,11 @@ func mtdAuth(tqc *transQClient) error {
 	defer func() {
 		der := exec.writeConn(req.ID, &resp)
 		if der != nil {
-			slog.Error("exec.writeConn", "error", err.Error(), "id", req.ID)
+			slog.Error("exec.writeConn", "error", der.Error(), "id", req.ID)
 		}
 	}()
 
-	err = auth(tqc, &req)
+	err := auth(tqc, req)
 	if err != nil {
 		resp.Code = failed
 		return fmt.Errorf("auth: %w", err)
@@ -38,15 +36,13 @@ func mtdAuth(tqc *transQClient) error {
 	return nil
 }
 
-func mtdEcho(tqc *transQClient) error {
+func mtdEcho(tqc *transQClient, str any) error {
 	format.FuncStart("mtdEcho")
 	defer format.FuncEnd("mtdEcho")
 
-	var req echoRequest
-
-	err := json.Unmarshal([]byte(tqc.Info.Data), &req)
-	if err != nil {
-		return fmt.Errorf("json.Unmarshal: %w", err)
+	req, ok := str.(*echoRequest)
+	if !ok {
+		return errBadRequestType
 	}
 
 	fmt.Println("echo resp: ", req.Message)
@@ -54,6 +50,6 @@ func mtdEcho(tqc *transQClient) error {
 	return nil
 }
 
-func mtdTranslate(tqc *transQClient) error {
+func mtdTranslate(tqc *transQClient, str any) error {
 	return nil
 }
