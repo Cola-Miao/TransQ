@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-type handler func(tqc *transQClient) error
+type handler func(tqc *transQClient, req any) error
 
 const (
 	methodAuth = iota
@@ -17,16 +17,21 @@ const (
 var exec executor
 
 var (
-	errNoMethod   = errors.New("no method")
-	errIDNotExist = errors.New("id not exist")
-	errIDExist    = errors.New("id exist")
+	errNoMethod       = errors.New("no method")
+	errIDNotExist     = errors.New("id not exist")
+	errIDExist        = errors.New("id exist")
+	errNoStructure    = errors.New("no structure")
+	errNoHandler      = errors.New("no handler")
+	errNoName         = errors.New("no name")
+	errBadRequestType = errors.New("bad request type")
 )
 
 type executor struct {
-	mu     sync.RWMutex
-	handle map[method]handler
-	name   map[method]string
-	conn   map[int]net.Conn
+	mu        sync.RWMutex
+	handle    map[method]handler
+	name      map[method]string
+	structure map[method]any
+	conn      map[int]net.Conn
 }
 
 type transQClient struct {
