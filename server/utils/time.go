@@ -2,9 +2,9 @@ package utils
 
 import "time"
 
-func GetOutTime(scd int) time.Time {
-	if scd == 0 {
+func GetOutTime(d time.Duration) time.Time {
+	if d == 0 {
 		return time.Time{}
 	}
-	return time.Now().Add(time.Second * time.Duration(scd))
+	return time.Now().Add(d)
 }
