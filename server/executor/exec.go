@@ -70,7 +70,12 @@ func Process(conn net.Conn) {
 	var tqc transQClient
 	tqc.Conn = conn
 
+	processLoop(&tqc)
+}
+
+func processLoop(tqc *transQClient) {
 	decoder := json.NewDecoder(tqc.Conn)
+
 	for {
 		err := decoder.Decode(&tqc.Info)
 		if err != nil {
@@ -88,7 +93,7 @@ func Process(conn net.Conn) {
 			slog.Warn("conn.SetDeadline", "error", err.Error())
 		}
 
-		err = exec.do(&tqc)
+		err = exec.do(tqc)
 		if err != nil {
 			slog.Error("executor.Do", "error", err.Error())
 		}
