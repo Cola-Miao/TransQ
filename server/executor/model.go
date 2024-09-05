@@ -8,7 +8,8 @@ import (
 type handler func(tqc *transQClient) error
 
 const (
-	methodEcho = iota + 1
+	methodAuth = iota
+	methodEcho
 	methodTranslate
 )
 
@@ -27,7 +28,7 @@ type transQClient struct {
 	Conn net.Conn
 	Info *information
 	Addr string
-	ID   string
+	ID   int
 }
 
 type method uint8
