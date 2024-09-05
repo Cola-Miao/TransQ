@@ -5,8 +5,9 @@ var (
 )
 
 type config struct {
-	Listener listener `yaml:"listener"`
-	LogLevel int      `yaml:"logLevel"`
+	Listener    listener `yaml:"listener"`
+	LogLevel    int      `yaml:"logLevel"`
+	ConnTimeout int      `yaml:"connTimeout"` // Second, 0 never timeout
 }
 
 type listener struct {

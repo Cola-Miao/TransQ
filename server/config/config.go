@@ -11,7 +11,8 @@ var defaultCfg = config{
 	Listener: listener{
 		Timeout: 0,
 	},
-	LogLevel: -4,
+	LogLevel:    -4,
+	ConnTimeout: 0,
 }
 
 func InitViper(cfgPath, cfgType string) error {
