@@ -123,3 +123,11 @@ func (e *executor) setConn(id int, conn net.Conn) error {
 	e.conn[id] = conn
 	return nil
 }
+
+func (e *executor) setConnForce(id int, conn net.Conn) error {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	e.conn[id] = conn
+	return nil
+}
