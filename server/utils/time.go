@@ -2,13 +2,9 @@ package utils
 
 import "time"
 
-const (
-	timeout = time.Minute * 0
-)
-
-func GetOutTime() time.Time {
-	if timeout == 0 {
+func GetOutTime(scd int) time.Time {
+	if scd == 0 {
 		return time.Time{}
 	}
-	return time.Now().Add(timeout)
+	return time.Now().Add(time.Second * time.Duration(scd))
 }
