@@ -2,8 +2,9 @@ package executor
 
 import (
 	"fmt"
+	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
-	"net"
+	"github.com/Cola-Miao/TransQ/server/utils"
 )
 
 func auth(tqc *transQClient, req *authRequest) error {
@@ -26,9 +27,9 @@ func auth(tqc *transQClient, req *authRequest) error {
 }
 
 func forceAuth(tqc *transQClient, req *authRequest) error {
-	conn, err := net.Dial("unix", req.Addr)
+	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.ConnTimeout)
 	if err != nil {
-		return fmt.Errorf("net.Dial: %w", err)
+		return fmt.Errorf("utils.DialSocketWithTimeout: %w", err)
 	}
 
 	// don`t check id exist, cover old conn
@@ -50,9 +51,9 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 		return errIDExist
 	}
 
-	conn, err := net.Dial("unix", req.Addr)
+	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.ConnTimeout)
 	if err != nil {
-		return fmt.Errorf("net.Dial: %w", err)
+		return fmt.Errorf("utils.DialSocketWithTimeout: %w", err)
 	}
 
 	// set id-conn, double check
