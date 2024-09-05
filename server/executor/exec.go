@@ -94,3 +94,27 @@ func Process(conn net.Conn) {
 		}
 	}
 }
+
+func (e *executor) getConn(id int) (net.Conn, error) {
+	e.mu.RLock()
+	defer e.mu.RUnlock()
+
+	conn, ok := e.conn[id]
+	if !ok {
+		return nil, errIDNotExist
+	}
+	return conn, nil
+}
+
+func (e *executor) setConn(id int, conn net.Conn) error {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	_, ok := e.conn[id]
+	if ok {
+		return errIDExist
+	}
+
+	e.conn[id] = conn
+	return nil
+}
