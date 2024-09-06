@@ -25,3 +25,15 @@ type echoResponse struct {
 	common
 	Message string `json:"msg"`
 }
+
+type translateRequest struct {
+	common
+	Source  int    `json:"source"`
+	Target  int    `json:"target"`
+	Message string `json:"msg"`
+}
+
+type translateResponse struct {
+	common
+	Message string `json:"msg"`
+}
