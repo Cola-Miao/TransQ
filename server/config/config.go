@@ -27,7 +27,12 @@ func InitViper(cfgPath, cfgType string) error {
 	viper.SetConfigType(cfgType)
 	viper.SetDefault("server", defaultCfg)
 
-	err := viper.ReadInConfig()
+	err := viper.SafeWriteConfig()
+	if err != nil {
+		slog.Warn("viper.SafeWriteConfig", "error", err.Error())
+	}
+
+	err = viper.ReadInConfig()
 	if err != nil {
 		return fmt.Errorf("viper.ReadInConfig: %v", err)
 	}
@@ -37,10 +42,6 @@ func InitViper(cfgPath, cfgType string) error {
 		return fmt.Errorf("viper.UnmarshalKey: %w", err)
 	}
 
-	err = viper.SafeWriteConfig()
-	if err != nil {
-		slog.Warn("viper.SafeWriteConfig", "error", err.Error())
-	}
 	slog.Info("config", "server", Cfg)
 
 	return nil
