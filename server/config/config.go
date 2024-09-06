@@ -5,11 +5,16 @@ import (
 	"github.com/Cola-Miao/TransQ/server/format"
 	"github.com/spf13/viper"
 	"log/slog"
+	"time"
 )
 
 var defaultCfg = config{
 	Listener: listener{
 		Timeout: 0,
+	},
+	Cache: cache{
+		DefaultExpiration: 0,
+		CleanupInterval:   time.Minute * 10,
 	},
 	LogLevel: -4,
 }
