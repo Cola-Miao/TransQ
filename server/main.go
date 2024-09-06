@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"github.com/Cola-Miao/TransQ/server/cache"
 	cfg "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/dao"
 	"github.com/Cola-Miao/TransQ/server/format"
@@ -63,6 +64,11 @@ func init() {
 		log.Panicf("initSocketListener: %s", err.Error())
 	}
 	listener = ls
+
+	err = cache.InitCache()
+	if err != nil {
+		log.Panicf("cache.InitCache: %s", err.Error())
+	}
 
 	slog.Info("run param", "work dir", workDir, "log dir", logDir, "socket path", socketPath)
 }
