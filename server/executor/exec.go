@@ -73,9 +73,14 @@ func (e *executor) do(tqc *transQClient) error {
 		return errNoHandler
 	}
 
-	err = hdl(tqc, str)
+	resp, err := hdl(tqc, str)
 	if err != nil {
 		return fmt.Errorf("method: %s: %w", name, err)
+	}
+
+	err = e.writeConn(tqc.ID, resp)
+	if err != nil {
+		return fmt.Errorf("e.writeConn: %w", err)
 	}
 
 	return nil

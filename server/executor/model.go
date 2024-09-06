@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-type handler func(tqc *transQClient, req any) error
+type handler func(tqc *transQClient, req any) (any, error)
 
 const (
 	methodAuth = iota

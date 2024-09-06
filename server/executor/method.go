@@ -3,53 +3,46 @@ package executor
 import (
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
-	"log/slog"
 )
 
-func mtdAuth(tqc *transQClient, str any) error {
+func mtdAuth(tqc *transQClient, str any) (any, error) {
 	format.FuncStart("mtdAuth")
 	defer format.FuncEnd("mtdAuth")
 
 	req, ok := str.(*authRequest)
 	if !ok {
-		return errBadRequestType
+		return nil, errBadRequestType
 	}
 
-	resp := authResponse{
+	resp := &authResponse{
 		common{
 			Sequence: req.Sequence,
 			Code:     success,
 		}}
-	defer func() {
-		der := exec.writeConn(req.ID, &resp)
-		if der != nil {
-			slog.Error("exec.writeConn", "error", der.Error(), "id", req.ID)
-		}
-	}()
 
 	err := auth(tqc, req)
 	if err != nil {
 		resp.Code = failed
-		return fmt.Errorf("auth: %w", err)
+		return resp, err
 	}
 
-	return nil
+	return resp, nil
 }
 
-func mtdEcho(tqc *transQClient, str any) error {
+func mtdEcho(tqc *transQClient, str any) (any, error) {
 	format.FuncStart("mtdEcho")
 	defer format.FuncEnd("mtdEcho")
 
 	req, ok := str.(*echoRequest)
 	if !ok {
-		return errBadRequestType
+		return nil, errBadRequestType
 	}
 
 	fmt.Println("echo resp: ", req.Message)
 
-	return nil
+	return nil, nil
 }
 
-func mtdTranslate(tqc *transQClient, str any) error {
-	return nil
+func mtdTranslate(tqc *transQClient, str any) (any, error) {
+	return nil, nil
 }
