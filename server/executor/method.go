@@ -45,5 +45,19 @@ func mtdEcho(tqc *transQClient, str any) (any, error) {
 }
 
 func mtdTranslate(tqc *transQClient, str any) (any, error) {
+	format.FuncStart("mtdTranslate")
+	defer format.FuncEnd("mtdTranslate")
+
+	req, ok := str.(*translateRequest)
+	if !ok {
+		return nil, ErrBadRequestType
+	}
+
+	resp, err := translate(req)
+	if err != nil {
+		resp.Code = failed
+		return resp, err
+	}
+
 	return nil, nil
 }
