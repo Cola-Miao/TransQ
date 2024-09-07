@@ -16,6 +16,9 @@ var defaultCfg = config{
 		DefaultExpiration: 0,
 		CleanupInterval:   time.Minute * 10,
 	},
+	Api: api{
+		LingocloudToken: "3975l6lr5pcbvidl6jl2",
+	},
 	LogLevel: -4,
 }
 
