@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Cola-Miao/TransQ/server/format"
 	"io"
 	"log/slog"
 	"net/http"
@@ -22,6 +23,9 @@ func init() {
 }
 
 func getRespBodyMap(req *http.Request) (map[string]any, error) {
+	format.FuncStart("getRespBodyMap")
+	defer format.FuncEnd("getRespBodyMap")
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("client.Do: %w", err)

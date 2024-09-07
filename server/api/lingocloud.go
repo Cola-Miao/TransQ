@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	lingocloudURL = "http://api.interpreter.caiyunai.com/v1/translator"
+	lingocloudURL = "https://api.interpreter.caiyunai.com/v1/translator"
 )
 
 type lingocloud struct {
