@@ -24,7 +24,7 @@ func (e *executor) init() {
 
 	e.register(methodAuth, mtdAuth, "auth", &authRequest{})
 	e.register(methodEcho, mtdEcho, "echo", &echoRequest{})
-	e.register(methodTranslate, mtdTranslate, "translate", nil)
+	e.register(methodTranslate, mtdTranslate, "translate", &translateRequest{})
 }
 
 func (e *executor) register(method method, handle handler, name string, structure any) {
@@ -50,28 +50,14 @@ func (e *executor) do(tqc *transQClient) error {
 
 	mtd := tqc.Info.Method
 
-	if _, ok := e.handle[mtd]; !ok {
-		return ErrNoMethod
+	name, str, hdl, err := e.mtdCheck(mtd)
+	if err != nil {
+		return fmt.Errorf("mtdCheck: %w", err)
 	}
 
-	name, ok := e.name[mtd]
-	if !ok {
-		return ErrNoName
-	}
-
-	str, ok := e.structure[mtd]
-	if !ok {
-		return ErrNoStructure
-	}
-
-	err := json.Unmarshal([]byte(tqc.Info.Data), &str)
+	err = json.Unmarshal([]byte(tqc.Info.Data), &str)
 	if err != nil {
 		return fmt.Errorf("json.Unmarshal: %w", err)
-	}
-
-	hdl, ok := e.handle[mtd]
-	if !ok {
-		return ErrNoHandler
 	}
 
 	resp, err := hdl(tqc, str)
@@ -136,4 +122,31 @@ func (e *executor) writeConn(id int, resp any) error {
 	}
 
 	return nil
+}
+
+func (e *executor) mtdCheck(mtd method) (name string, structure any, handle handler, err error) {
+	if _, ok := e.handle[mtd]; !ok {
+		err = ErrNoMethod
+		return
+	}
+
+	name, ok := e.name[mtd]
+	if !ok {
+		err = ErrNoName
+		return
+	}
+
+	structure, ok = e.structure[mtd]
+	if !ok {
+		err = ErrNoStructure
+		return
+	}
+
+	handle, ok = e.handle[mtd]
+	if !ok {
+		err = ErrNoHandler
+		return
+	}
+
+	return
 }
