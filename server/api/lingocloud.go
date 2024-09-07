@@ -6,8 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
-	"io"
-	"log/slog"
 	"net/http"
 )
 
@@ -34,49 +32,15 @@ func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
 
 	tp = &TransResp{}
 
-	payload := map[string]any{
-		"source":     "Lingocloud is the best translation service.",
-		"trans_type": "auto2zh",
-		"request_id": "demo",
-		"detect":     true,
-	}
-
-	js, err := json.Marshal(payload)
+	req, err := l.generateRequest()
 	if err != nil {
-		tp.err = fmt.Errorf("json.Marshal: %w", err)
+		tp.err = fmt.Errorf("generateRequest: %w", err)
 		return
 	}
 
-	req, err := http.NewRequest("POST", lingocloudURL, bytes.NewReader(js))
+	kv, err := getRespBodyMap(req)
 	if err != nil {
-		tp.err = fmt.Errorf("http.NewRequest: %w", err)
-		return
-	}
-	req.Header = l.header
-
-	resp, err := client.Do(req)
-	if err != nil {
-		tp.err = fmt.Errorf("client.Do: %w", err)
-		return
-	}
-
-	defer func() {
-		der := resp.Body.Close()
-		if der != nil {
-			slog.Error("resp.Body.Close", "error", err.Error())
-		}
-	}()
-
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		tp.err = fmt.Errorf("io.ReadAll: %w", err)
-		return
-	}
-
-	var kv map[string]any
-	err = json.Unmarshal(data, &kv)
-	if err != nil {
-		tp.err = fmt.Errorf("json.Unmarshal: %w", err)
+		tp.err = fmt.Errorf("getRespBodyMap: %w", err)
 		return
 	}
 
@@ -94,4 +58,26 @@ func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
 
 	tp.Message = target
 	return
+}
+
+func (l *lingocloud) generateRequest() (*http.Request, error) {
+	payload := map[string]any{
+		"source":     "Lingocloud is the best translation service.",
+		"trans_type": "auto2zh",
+		"request_id": "demo",
+		"detect":     true,
+	}
+
+	js, err := json.Marshal(payload)
+	if err != nil {
+		return nil, fmt.Errorf("json.Marshal: %w", err)
+	}
+
+	req, err := http.NewRequest("POST", lingocloudURL, bytes.NewReader(js))
+	if err != nil {
+		return nil, fmt.Errorf("http.NewRequest: %w", err)
+	}
+
+	req.Header = l.header
+	return req, nil
 }
