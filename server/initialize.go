@@ -94,11 +94,11 @@ func initEnvWithGOOS() {
 	}
 }
 
-func initAPI() error {
+func initAPI() {
 	err := thirdAPI.Lingocloud.Initialize(Cfg.Api.LingocloudToken)
 	if err != nil {
-		return fmt.Errorf("Lingocloud.Initialize: %w", err)
+		slog.Warn("Lingocloud.Initialize", "error", err.Error())
 	}
 
-	return nil
+	return
 }
