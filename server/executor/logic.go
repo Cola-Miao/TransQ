@@ -71,7 +71,7 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 }
 
 func translate(req *translateRequest) (*translateResponse, error) {
-	tp := thirdAPI.Lingocloud.SendMessage(&thirdAPI.TransReq{
+	tp := thirdAPI.API[1].SendMessage(&thirdAPI.TransReq{
 		Source:  req.Source,
 		Target:  req.Target,
 		Message: req.Message,
