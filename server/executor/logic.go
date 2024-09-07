@@ -5,6 +5,7 @@ import (
 	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
+	"github.com/Cola-Miao/TransQ/server/thirdAPI"
 	"github.com/Cola-Miao/TransQ/server/utils"
 )
 
@@ -67,4 +68,19 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 	tqc.ID = req.ID
 
 	return nil
+}
+
+func translate(req *translateRequest) (*translateResponse, error) {
+	tp := thirdAPI.Lingocloud.SendMessage(&thirdAPI.TransReq{
+		Source:  req.Source,
+		Target:  req.Target,
+		Message: req.Message,
+	})
+
+	if tp.Error != nil {
+		return nil, fmt.Errorf("SendMessage: %w", tp.Error)
+	}
+
+	fmt.Println("translate resp: ", tp.Message)
+	return nil, nil
 }
