@@ -62,6 +62,9 @@ func (l *lingocloud) SendMessage(tq *TransReq) (tp *TransResp) {
 }
 
 func (l *lingocloud) generateRequest(tq *TransReq) (*http.Request, error) {
+	format.FuncStart("generateRequest")
+	defer format.FuncEnd("generateRequest")
+
 	transType, err := l.reqConvert(tq)
 	if err != nil {
 		return nil, fmt.Errorf("reqConvert: %w", err)

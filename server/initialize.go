@@ -95,6 +95,9 @@ func initEnvWithGOOS() {
 }
 
 func initAPI() {
+	format.FuncStart("initAPI")
+	defer format.FuncEnd("initAPI")
+
 	err := thirdAPI.Lingocloud.Initialize(Cfg.Api.LingocloudToken)
 	if err != nil {
 		slog.Warn("Lingocloud.Initialize", "error", err.Error())
