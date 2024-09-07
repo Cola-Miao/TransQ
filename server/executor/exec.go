@@ -6,6 +6,7 @@ import (
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
 	"log"
+	"log/slog"
 	"net"
 )
 
@@ -61,13 +62,14 @@ func (e *executor) do(tqc *transQClient) error {
 	}
 
 	resp, err := hdl(tqc, str)
+	if resp != nil {
+		wer := e.writeConn(tqc.ID, resp)
+		if wer != nil {
+			slog.Warn("e.writeConn", "error", wer.Error())
+		}
+	}
 	if err != nil {
 		return fmt.Errorf("method: %s: %w", name, err)
-	}
-
-	err = e.writeConn(tqc.ID, resp)
-	if err != nil {
-		return fmt.Errorf("e.writeConn: %w", err)
 	}
 
 	return nil
