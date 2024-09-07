@@ -5,7 +5,6 @@ import (
 	"fmt"
 	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
-	"github.com/Cola-Miao/TransQ/server/thirdAPI"
 	"io"
 	"log/slog"
 	"net"
@@ -92,16 +91,4 @@ func initEnvWithGOOS() {
 	default:
 		logDir = "./logs/"
 	}
-}
-
-func initAPI() {
-	format.FuncStart("initAPI")
-	defer format.FuncEnd("initAPI")
-
-	err := thirdAPI.API[1].Initialize(Cfg.Api.LingocloudToken)
-	if err != nil {
-		slog.Warn("Lingocloud.Initialize", "error", err.Error())
-	}
-
-	return
 }

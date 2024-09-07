@@ -28,12 +28,13 @@ type echoResponse struct {
 
 type translateRequest struct {
 	common
-	Source  int    `json:"source"`
-	Target  int    `json:"target"`
+	Engine  []int  `json:"eng"`
+	Source  int    `json:"src"`
+	Target  int    `json:"tag"`
 	Message string `json:"msg"`
 }
 
 type translateResponse struct {
 	common
-	Message string `json:"msg"`
+	Message []string `json:"msg"`
 }

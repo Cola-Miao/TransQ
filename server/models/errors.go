@@ -12,4 +12,5 @@ var (
 	ErrBadRequestType      = errors.New("bad request type")
 	ErrUnsupportedLanguage = errors.New("unsupported language")
 	ErrAssertionType       = errors.New("wrong assertion type")
+	ErrAPINotExist         = errors.New("api not exist")
 )

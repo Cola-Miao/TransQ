@@ -7,6 +7,7 @@ import (
 	. "github.com/Cola-Miao/TransQ/server/models"
 	"github.com/Cola-Miao/TransQ/server/thirdAPI"
 	"github.com/Cola-Miao/TransQ/server/utils"
+	"log/slog"
 )
 
 func auth(tqc *transQClient, req *authRequest) error {
@@ -71,16 +72,25 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 }
 
 func translate(req *translateRequest) (*translateResponse, error) {
-	tp := thirdAPI.API[1].SendMessage(&thirdAPI.TransReq{
-		Source:  req.Source,
-		Target:  req.Target,
-		Message: req.Message,
-	})
-
-	if tp.Error != nil {
-		return nil, fmt.Errorf("SendMessage: %w", tp.Error)
+	apis, err := thirdAPI.GetAPIsByID(req.Engine...)
+	if err != nil {
+		return &translateResponse{}, fmt.Errorf("thirdAPI.GetAPIsByID: %w", err)
 	}
 
-	fmt.Println("translate resp: ", tp.Message)
+	messages := make([]string, len(apis))
+
+	for i, eng := range apis {
+		tp := eng.SendMessage(&thirdAPI.TransReq{
+			Source:  req.Source,
+			Target:  req.Target,
+			Message: req.Message,
+		})
+		if tp.Error != nil {
+			slog.Error("eng.SendMessage", "id", req.Engine[i], "error", tp.Error)
+		}
+		messages[i] = tp.Message
+	}
+
+	fmt.Println("translate resp: ", messages)
 	return nil, nil
 }

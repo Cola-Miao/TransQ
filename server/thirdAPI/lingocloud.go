@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
 	. "github.com/Cola-Miao/TransQ/server/models"
 	"net/http"
@@ -18,10 +19,10 @@ type lingocloud struct {
 	header http.Header
 }
 
-func (l *lingocloud) Initialize(token string) error {
+func (l *lingocloud) initialize() error {
 	hd := http.Header{}
 	hd.Set("content-type", "application/json")
-	hd.Set("x-authorization", "token "+token)
+	hd.Set("x-authorization", "token "+Cfg.Api.LingocloudToken)
 	l.header = hd
 
 	return nil
