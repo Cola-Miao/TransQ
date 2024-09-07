@@ -1,4 +1,4 @@
-package api
+package thirdAPI
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ type lingocloud struct {
 	header http.Header
 }
 
-func (l *lingocloud) initialize(token string) error {
+func (l *lingocloud) Initialize(token string) error {
 	hd := http.Header{}
 	hd.Set("content-type", "application/json")
 	hd.Set("x-authorization", "token "+token)
@@ -27,9 +27,9 @@ func (l *lingocloud) initialize(token string) error {
 	return nil
 }
 
-func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
-	format.FuncStartWithData("sendMessage", tq)
-	defer format.FuncEndWithData("sendMessage", tp)
+func (l *lingocloud) SendMessage(tq *TransReq) (tp *TransResp) {
+	format.FuncStartWithData("SendMessage", tq)
+	defer format.FuncEndWithData("SendMessage", tp)
 
 	tp = &TransResp{}
 
