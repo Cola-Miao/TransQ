@@ -6,6 +6,7 @@ import (
 	cfg "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/dao"
 	"github.com/Cola-Miao/TransQ/server/format"
+	"github.com/Cola-Miao/TransQ/server/thirdAPI"
 	"github.com/Cola-Miao/TransQ/server/uds"
 	"log"
 	"log/slog"
@@ -64,7 +65,7 @@ func init() {
 		log.Panicf("cache.InitCache: %s", err.Error())
 	}
 
-	initAPI()
+	thirdAPI.InitAPIs()
 
 	ls, err := initSocketListener()
 	if err != nil {
