@@ -5,4 +5,4 @@ type api interface {
 	SendMessage(tq *TransReq) (tp *TransResp)
 }
 
-var Lingocloud api
+var Lingocloud lingocloud
