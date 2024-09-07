@@ -22,5 +22,5 @@ type TransReq struct {
 
 type TransResp struct {
 	Message string
-	err     error
+	Error   error
 }

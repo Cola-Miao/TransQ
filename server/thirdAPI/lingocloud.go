@@ -35,25 +35,25 @@ func (l *lingocloud) SendMessage(tq *TransReq) (tp *TransResp) {
 
 	req, err := l.generateRequest(tq)
 	if err != nil {
-		tp.err = fmt.Errorf("generateRequest: %w", err)
+		tp.Error = fmt.Errorf("generateRequest: %w", err)
 		return
 	}
 
 	kv, err := getRespBodyMap(req)
 	if err != nil {
-		tp.err = fmt.Errorf("getRespBodyMap: %w", err)
+		tp.Error = fmt.Errorf("getRespBodyMap: %w", err)
 		return
 	}
 
 	message, ok := kv["message"].(string)
 	if ok {
-		tp.err = errors.New(message)
+		tp.Error = errors.New(message)
 		return
 	}
 
 	target, ok := kv["target"].(string)
 	if !ok {
-		tp.err = ErrAssertionType
+		tp.Error = ErrAssertionType
 		return
 	}
 
