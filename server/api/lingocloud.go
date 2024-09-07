@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 	"net/http"
 )
 
@@ -52,7 +53,7 @@ func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
 
 	target, ok := kv["target"].(string)
 	if !ok {
-		tp.err = errors.New("target is not a string")
+		tp.err = ErrAssertionType
 		return
 	}
 
@@ -90,12 +91,12 @@ func (l *lingocloud) generateRequest(tq *TransReq) (*http.Request, error) {
 func (l *lingocloud) reqConvert(req *TransReq) (string, error) {
 	source, ok := lcLanguageCode[req.Source]
 	if !ok {
-		return "", errors.New("unsupported language")
+		return "", ErrUnsupportedLanguage
 	}
 
 	target, ok := lcLanguageCode[req.Target]
 	if !ok {
-		return "", errors.New("unsupported language")
+		return "", ErrUnsupportedLanguage
 	}
 
 	transType := fmt.Sprintf("%s2%s", source, target)
