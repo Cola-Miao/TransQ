@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 	"log"
 	"net"
 )
@@ -50,17 +51,17 @@ func (e *executor) do(tqc *transQClient) error {
 	mtd := tqc.Info.Method
 
 	if _, ok := e.handle[mtd]; !ok {
-		return errNoMethod
+		return ErrNoMethod
 	}
 
 	name, ok := e.name[mtd]
 	if !ok {
-		return errNoName
+		return ErrNoName
 	}
 
 	str, ok := e.structure[mtd]
 	if !ok {
-		return errNoStructure
+		return ErrNoStructure
 	}
 
 	err := json.Unmarshal([]byte(tqc.Info.Data), &str)
@@ -70,7 +71,7 @@ func (e *executor) do(tqc *transQClient) error {
 
 	hdl, ok := e.handle[mtd]
 	if !ok {
-		return errNoHandler
+		return ErrNoHandler
 	}
 
 	resp, err := hdl(tqc, str)
@@ -92,7 +93,7 @@ func (e *executor) getConn(id int) (net.Conn, error) {
 
 	conn, ok := e.conn[id]
 	if !ok {
-		return nil, errIDNotExist
+		return nil, ErrIDNotExist
 	}
 	return conn, nil
 }
@@ -103,7 +104,7 @@ func (e *executor) setConn(id int, conn net.Conn) error {
 
 	_, ok := e.conn[id]
 	if ok {
-		return errIDExist
+		return ErrIDExist
 	}
 
 	e.conn[id] = conn

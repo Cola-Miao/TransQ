@@ -3,6 +3,7 @@ package executor
 import (
 	"fmt"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 )
 
 func mtdAuth(tqc *transQClient, str any) (any, error) {
@@ -11,7 +12,7 @@ func mtdAuth(tqc *transQClient, str any) (any, error) {
 
 	req, ok := str.(*authRequest)
 	if !ok {
-		return nil, errBadRequestType
+		return nil, ErrBadRequestType
 	}
 
 	resp := &authResponse{
@@ -35,7 +36,7 @@ func mtdEcho(tqc *transQClient, str any) (any, error) {
 
 	req, ok := str.(*echoRequest)
 	if !ok {
-		return nil, errBadRequestType
+		return nil, ErrBadRequestType
 	}
 
 	fmt.Println("echo resp: ", req.Message)

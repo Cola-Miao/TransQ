@@ -1,7 +1,6 @@
 package executor
 
 import (
-	"errors"
 	"net"
 	"sync"
 )
@@ -15,16 +14,6 @@ const (
 )
 
 var exec executor
-
-var (
-	errNoMethod       = errors.New("no method")
-	errIDNotExist     = errors.New("id not exist")
-	errIDExist        = errors.New("id exist")
-	errNoStructure    = errors.New("no structure")
-	errNoHandler      = errors.New("no handler")
-	errNoName         = errors.New("no name")
-	errBadRequestType = errors.New("bad request type")
-)
 
 type executor struct {
 	mu        sync.RWMutex

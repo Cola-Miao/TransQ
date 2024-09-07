@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "github.com/Cola-Miao/TransQ/server/config"
 	"github.com/Cola-Miao/TransQ/server/format"
+	. "github.com/Cola-Miao/TransQ/server/models"
 	"github.com/Cola-Miao/TransQ/server/utils"
 )
 
@@ -48,7 +49,7 @@ func stdAuth(tqc *transQClient, req *authRequest) error {
 	// check id exist
 	_, err := exec.getConn(req.ID)
 	if err == nil {
-		return errIDExist
+		return ErrIDExist
 	}
 
 	conn, err := utils.DialSocketWithTimeout(req.Addr, Cfg.Listener.Timeout)
