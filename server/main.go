@@ -59,16 +59,18 @@ func init() {
 		log.Panicf("dao.InitSqlite: %s", err.Error())
 	}
 
+	err = cache.InitCache()
+	if err != nil {
+		log.Panicf("cache.InitCache: %s", err.Error())
+	}
+
+	initAPI()
+
 	ls, err := initSocketListener()
 	if err != nil {
 		log.Panicf("initSocketListener: %s", err.Error())
 	}
 	listener = ls
-
-	err = cache.InitCache()
-	if err != nil {
-		log.Panicf("cache.InitCache: %s", err.Error())
-	}
 
 	slog.Info("run param", "work dir", workDir, "log dir", logDir, "socket path", socketPath)
 }
