@@ -32,7 +32,7 @@ func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
 
 	tp = &TransResp{}
 
-	req, err := l.generateRequest()
+	req, err := l.generateRequest(tq)
 	if err != nil {
 		tp.err = fmt.Errorf("generateRequest: %w", err)
 		return
@@ -60,10 +60,15 @@ func (l *lingocloud) sendMessage(tq *TransReq) (tp *TransResp) {
 	return
 }
 
-func (l *lingocloud) generateRequest() (*http.Request, error) {
+func (l *lingocloud) generateRequest(tq *TransReq) (*http.Request, error) {
+	transType, err := l.reqConvert(tq)
+	if err != nil {
+		return nil, fmt.Errorf("reqConvert: %w", err)
+	}
+
 	payload := map[string]any{
-		"source":     "Lingocloud is the best translation service.",
-		"trans_type": "auto2zh",
+		"source":     tq.Message,
+		"trans_type": transType,
 		"request_id": "demo",
 		"detect":     true,
 	}
@@ -80,4 +85,19 @@ func (l *lingocloud) generateRequest() (*http.Request, error) {
 
 	req.Header = l.header
 	return req, nil
+}
+
+func (l *lingocloud) reqConvert(req *TransReq) (string, error) {
+	source, ok := lcLanguageCode[req.Source]
+	if !ok {
+		return "", errors.New("unsupported language")
+	}
+
+	target, ok := lcLanguageCode[req.Target]
+	if !ok {
+		return "", errors.New("unsupported language")
+	}
+
+	transType := fmt.Sprintf("%s2%s", source, target)
+	return transType, nil
 }
